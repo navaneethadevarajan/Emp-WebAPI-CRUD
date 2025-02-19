@@ -9,9 +9,9 @@ To know more about the Swagger tool visit https://www.geeksforgeeks.org/testing-
 
 ## Development Server
 To start the local development server, run:
-
+```bash
 dotnet run
-
+```
 Once the server is running, open your browser and navigate to http://localhost:5081/. 
 
 This will open the Swagger UI where you can test the API end points
@@ -45,13 +45,13 @@ Implement the Logic: Implement the logic for the endpoint in the corresponding B
 
 ## Building
 To build the project, run:
-
+```bash
 dotnet build
-
+```
 This will compile your project and store the build artifacts in the bin/ directory.
-
+```bash
 dotnet run
-
+```
 This will start the application and make it available at http://localhost:5081/.
 
 ## Additional Resources
