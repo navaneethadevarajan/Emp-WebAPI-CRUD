@@ -1,0 +1,15 @@
+C:\Users\NARADEVA\Desktop\.net\WEB API\EmployeeManagementSystem\bin\Release\net8.0\publish\EmployeeManagementSystem.exe
+C:\Users\NARADEVA\Desktop\.net\WEB API\EmployeeManagementSystem\bin\Release\net8.0\publish\appsettings.Development.json
+C:\Users\NARADEVA\Desktop\.net\WEB API\EmployeeManagementSystem\bin\Release\net8.0\publish\appsettings.json
+C:\Users\NARADEVA\Desktop\.net\WEB API\EmployeeManagementSystem\bin\Release\net8.0\publish\EmployeeManagementSystem.dll
+C:\Users\NARADEVA\Desktop\.net\WEB API\EmployeeManagementSystem\bin\Release\net8.0\publish\EmployeeManagementSystem.deps.json
+C:\Users\NARADEVA\Desktop\.net\WEB API\EmployeeManagementSystem\bin\Release\net8.0\publish\EmployeeManagementSystem.runtimeconfig.json
+C:\Users\NARADEVA\Desktop\.net\WEB API\EmployeeManagementSystem\bin\Release\net8.0\publish\EmployeeManagementSystem.pdb
+C:\Users\NARADEVA\Desktop\.net\WEB API\EmployeeManagementSystem\bin\Release\net8.0\publish\Microsoft.AspNetCore.OpenApi.dll
+C:\Users\NARADEVA\Desktop\.net\WEB API\EmployeeManagementSystem\bin\Release\net8.0\publish\Microsoft.Extensions.DependencyInjection.Abstractions.dll
+C:\Users\NARADEVA\Desktop\.net\WEB API\EmployeeManagementSystem\bin\Release\net8.0\publish\Microsoft.Extensions.Logging.Abstractions.dll
+C:\Users\NARADEVA\Desktop\.net\WEB API\EmployeeManagementSystem\bin\Release\net8.0\publish\Microsoft.OpenApi.dll
+C:\Users\NARADEVA\Desktop\.net\WEB API\EmployeeManagementSystem\bin\Release\net8.0\publish\Npgsql.dll
+C:\Users\NARADEVA\Desktop\.net\WEB API\EmployeeManagementSystem\bin\Release\net8.0\publish\Swashbuckle.AspNetCore.Swagger.dll
+C:\Users\NARADEVA\Desktop\.net\WEB API\EmployeeManagementSystem\bin\Release\net8.0\publish\Swashbuckle.AspNetCore.SwaggerGen.dll
+C:\Users\NARADEVA\Desktop\.net\WEB API\EmployeeManagementSystem\bin\Release\net8.0\publish\Swashbuckle.AspNetCore.SwaggerUI.dll

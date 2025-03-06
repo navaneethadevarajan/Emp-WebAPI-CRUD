@@ -1,3 +1,6 @@
+using Microsoft.AspNetCore.Mvc;
+
+[ApiExplorerSettings(GroupName = "Employee360")]
 public static class DepartmentRoutes
 {
     public static void RegisterDepartmentRoutes(this WebApplication app)
@@ -9,6 +12,8 @@ public static class DepartmentRoutes
         })
         .WithName("GetAllDept")
         .WithOpenApi();
+
+        
         app.MapPost("/CreateDepartment", (Department department, IDepartmentManagement deptManagement) =>
         {
             if (string.IsNullOrEmpty(department.DepartmentName))
@@ -21,6 +26,8 @@ public static class DepartmentRoutes
         })
         .WithName("CreateDepartment")
         .WithOpenApi();
+
+
         app.MapPut("/UpdateDepartmentById", (int departmentId,Department updatedDepartment, IDepartmentManagement deptManagement) =>
         {
             try
@@ -35,6 +42,8 @@ public static class DepartmentRoutes
         })
         .WithName("UpdatedDepartmentById")
         .WithOpenApi();
+
+
         app.MapDelete("/RemoveDepartmentById", (int departmentId, IDepartmentManagement deptManagement, IEmployeeManagement empManagement) =>
         {
             try

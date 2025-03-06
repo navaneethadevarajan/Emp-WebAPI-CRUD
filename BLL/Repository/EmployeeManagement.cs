@@ -1,3 +1,4 @@
+
 public class EmployeeManagement : IEmployeeManagement
     {
         private IDALBase _iDALBase;
@@ -29,5 +30,15 @@ public class EmployeeManagement : IEmployeeManagement
         public void UpdateEmployeeById(int employeeId, Employee updatedEmployee)
         {
             _iDALBase.UpdateEmployeeById(employeeId,updatedEmployee);
+        }
+
+       public void SaveEmployeeFile(int employeeId, string fileName)
+        {
+            _iDALBase.SaveEmployeeFile(employeeId, fileName);
+        }
+
+        public string? GetEmployeeFileName(int employeeId)
+        {
+            return _iDALBase.GetEmployeeFileName(employeeId);
         }
     }
