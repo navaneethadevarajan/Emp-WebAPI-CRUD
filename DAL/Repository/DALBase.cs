@@ -1,4 +1,7 @@
+using System.Diagnostics;
+using Microsoft.AspNetCore.Mvc;
 using Npgsql;
+using NpgsqlTypes;
 
 public class DALBase : IDALBase
     {
@@ -47,7 +50,8 @@ public class DALBase : IDALBase
                         e.EmployeeLocation, 
                         e.EmployeeDateOfBirth,
                         d.DepartmentId, 
-                        d.DepartmentName
+                        d.DepartmentName,
+                        e.FileName
                     FROM Employee e
                     JOIN Department d ON e.DepartmentId = d.DepartmentId
                     ORDER BY e.EmployeeId ASC";
@@ -111,7 +115,8 @@ public class DALBase : IDALBase
                             EmployeeLocation = reader["EmployeeLocation"].ToString(),
                             EmployeeDateOfBirth = Convert.ToDateTime(reader["EmployeeDateOfBirth"]),
                             DepartmentId = Convert.ToInt32(reader["DepartmentId"]),
-                            DepartmentName = reader["DepartmentName"].ToString()
+                            DepartmentName = reader["DepartmentName"].ToString(),
+                            FileName = reader["FileName"].ToString()
                         });
                     }
                 }
@@ -131,30 +136,39 @@ public class DALBase : IDALBase
             }
         }
     }
-    public void CreateEmployee(Employee employee)
+    // 
+    public Employee CreateEmployee(Employee employee)
+{
+    using (var connection = new NpgsqlConnection(connectionString))
     {
-        using (var connection = new NpgsqlConnection(connectionString))
+        connection.Open();
+        using (var command = new NpgsqlCommand(@"
+            INSERT INTO Employee (EmployeeName, EmployeeAge, EmployeeLocation, EmployeeDateOfBirth, DepartmentId, FileName)
+            VALUES (@EmployeeName, @EmployeeAge, @EmployeeLocation, @EmployeeDateOfBirth, @DepartmentId, @FileName)
+            RETURNING EmployeeId;", connection)) // ✅ RETURNING EmployeeId ensures we get the generated ID
         {
-            connection.Open();
-            using(var command=new NpgsqlCommand("CALL AddEmployee(@EmployeeName::VARCHAR, @EmployeeAge::INTEGER, @EmployeeLocation::VARCHAR, @EmployeeDateOfBirth::DATE, @DepartmentId::INTEGER)", connection))
-            {
-                command.Parameters.AddWithValue("@EmployeeName", employee.EmployeeName ?? (object)DBNull.Value);
-                command.Parameters.AddWithValue("@EmployeeAge", employee.EmployeeAge);
-                command.Parameters.AddWithValue("@EmployeeLocation", employee.EmployeeLocation ?? (object)DBNull.Value);
-                command.Parameters.AddWithValue("@EmployeeDateOfBirth", employee.EmployeeDateOfBirth.Date);
-                command.Parameters.AddWithValue("@DepartmentId", employee.DepartmentId);
-                command.ExecuteNonQuery();
+            command.Parameters.AddWithValue("@EmployeeName", employee.EmployeeName ?? (object)DBNull.Value);
+            command.Parameters.AddWithValue("@EmployeeAge", employee.EmployeeAge);
+            command.Parameters.AddWithValue("@EmployeeLocation", employee.EmployeeLocation ?? (object)DBNull.Value);
+            command.Parameters.AddWithValue("@EmployeeDateOfBirth", employee.EmployeeDateOfBirth.Date);
+            command.Parameters.AddWithValue("@DepartmentId", employee.DepartmentId);
+            command.Parameters.AddWithValue("@FileName", employee.FileName ?? (object)DBNull.Value);
 
-            }
+            int newEmployeeId = Convert.ToInt32(command.ExecuteScalar());
+
+            employee.EmployeeId = newEmployeeId;
+            return employee;
         }
     }
+}
 
-    public void UpdateEmployeeById(int employeeId, Employee updatedEmployee)
+
+    public void UpdateEmployeeById(int employeeId,[FromBody] Employee updatedEmployee)
     {
             using (var connection = new NpgsqlConnection(connectionString))
             {
             connection.Open();
-                using(var command=new NpgsqlCommand("CALL  UpdateEmployee(@EmployeeId::INTEGER, @EmployeeName::VARCHAR, @EmployeeAge::INTEGER, @EmployeeLocation::VARCHAR, @EmployeeDateOfBirth::DATE, @DepartmentId::INTEGER)", connection))
+                using(var command=new NpgsqlCommand("CALL  UpdateEmployee(@EmployeeId::INTEGER, @EmployeeName::VARCHAR, @EmployeeAge::INTEGER, @EmployeeLocation::VARCHAR, @EmployeeDateOfBirth::DATE, @DepartmentId::INTEGER,@FileName::VARCHAR)", connection))
                 {   
                     command.Parameters.AddWithValue("@EmployeeId", employeeId);
                     command.Parameters.AddWithValue("@EmployeeName", updatedEmployee.EmployeeName);
@@ -162,6 +176,7 @@ public class DALBase : IDALBase
                     command.Parameters.AddWithValue("@EmployeeLocation", updatedEmployee.EmployeeLocation);
                     command.Parameters.AddWithValue("@EmployeeDateOfBirth", updatedEmployee.EmployeeDateOfBirth.Date);
                     command.Parameters.AddWithValue("@DepartmentId", updatedEmployee.DepartmentId);
+                    command.Parameters.AddWithValue("@FileName", (object)updatedEmployee.FileName ?? DBNull.Value);
                     command.ExecuteNonQuery();
 
                 }
@@ -221,4 +236,40 @@ public class DALBase : IDALBase
                 }
             }
         }
+
+        public void SaveEmployeeFile(int employeeId, string fileName)
+        {
+            using (var connection = new NpgsqlConnection(connectionString))
+            {
+                connection.Open();
+                using (var command = new NpgsqlCommand("UPDATE Employee SET FileName = @FileName WHERE EmployeeId = @EmployeeId", connection))
+                {
+                    command.Parameters.AddWithValue("@EmployeeId", employeeId);
+                    command.Parameters.AddWithValue("@FileName", fileName ?? (object)DBNull.Value);
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
+
+    public string? GetEmployeeFileName(int employeeId)
+{
+    using (var connection = new NpgsqlConnection(connectionString))
+    {
+        connection.Open();
+        string query = "SELECT FileName FROM Employee WHERE EmployeeId = @EmployeeId";
+
+        using (var command = new NpgsqlCommand(query, connection))
+        {
+            command.Parameters.AddWithValue("@EmployeeId", employeeId);
+
+            var result = command.ExecuteScalar();
+            if (result != DBNull.Value && result != null)
+            {
+                return result.ToString();  // ✅ Returns the filename if found
+            }
+        }
     }
+    return null;  // ✅ Ensures all code paths return a value
+}
+
+}
